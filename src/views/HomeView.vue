@@ -1,18 +1,42 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div>
+    <PcHeader v-if="viewportWidth >= 800" />
+    <MobileHeader v-if="viewportWidth <=800" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+
+// components
+import PcHeader from '@/components/semantics/PcHeader.vue';
+import MobileHeader from "../components/semantics/MobileHeader.vue";
+
+// assets
 
 export default defineComponent({
-  name: 'HomeView',
-  components: {
-    HelloWorld,
-  },
-});
+    name: "HomeView",
+    components: {
+      MobileHeader,
+      PcHeader,
+    },
+    data(){
+      return {
+        viewportWidth: window.innerWidth,
+      }
+    },
+    created(){
+      window.addEventListener("resize", this.handleResize);
+    },
+    methods: {
+      handleResize() {
+        this.viewportWidth = window.innerWidth;
+      }
+    }
+
+})
 </script>
+
+<style>
+
+</style>

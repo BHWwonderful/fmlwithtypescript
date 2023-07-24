@@ -1,0 +1,14 @@
+html, body, header, main, footer, button{
+    margin: 0;
+    padding: 0;
+}
+
+button{
+    border:none;
+    background: none;
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+}
