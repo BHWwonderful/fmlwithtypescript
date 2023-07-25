@@ -5,7 +5,7 @@
           <img :src="hamburgerImg" />
         </div>
         <div class="title">
-          <h1>아이고 내 인생</h1>
+          <h1>FML</h1>
         </div>
         <div>
           <LogInButton v-if="isLogIn == false" />

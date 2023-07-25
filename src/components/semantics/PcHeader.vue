@@ -3,7 +3,7 @@
       <div class="information">
         <div class="content">
           <div class="logo">
-            <h1>아이고 내 인생</h1>
+            <h1>FML</h1>
           </div>
           <div class="user">
             <div class="buttons">
@@ -18,7 +18,7 @@
         <div class="content">
           <nav class="links">
             <router-link to="/">ALL</router-link>
-            <router-link to="/top">Top</router-link>
+            <router-link to="/top">Random</router-link>
           </nav>
           <div>
             <input type="text"/>
