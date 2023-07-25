@@ -10,7 +10,7 @@
               <button class="submit">Submit your FML</button>
               <button class="moderate">Moderate your FML</button>
             </div>
-            <span>Log in</span>
+            <span class="login">Log in</span>
           </div>
         </div>
       </div>
@@ -36,9 +36,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .information{
+.information{
   height:60px;
   background-color: rgba(0, 102, 174 ,1);
+}
+
+.information div{
+  height: 60px;
+}
+
+.logo{
+  display: flex;
+  align-items: center;
+}
+
+.login{
+  line-height:60px;
 }
 
 .navigation{
@@ -56,11 +69,11 @@ export default defineComponent({
 }
 
 .links{
-      display: flex;
-      align-items: center;
-      height:40px;
-      margin-left:-1rem;
-    }
+  display: flex;
+  align-items: center;
+  height:40px;
+  margin-left:-1rem;
+}
 
 .links a{
   color:white;
@@ -85,7 +98,7 @@ export default defineComponent({
 .buttons{
   width: 80%;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 }
 
 .submit{
@@ -100,5 +113,6 @@ export default defineComponent({
   color:white;
   border-radius: 20px;
   padding: 8px;
+  margin-left: 16px;
 }
 </style>

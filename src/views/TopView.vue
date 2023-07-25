@@ -1,7 +1,7 @@
 <template>
   <div>
-    <PcHeader />
-    <MobileHeader/>
+    <PcHeader v-if="viewportWidth >= 800" />
+    <MobileHeader v-if="viewportWidth <=800" />
   </div>
 </template>
 
@@ -15,6 +15,19 @@ export default defineComponent({
     components:{
       PcHeader,
       MobileHeader,
+    },
+    data(){
+      return {
+        viewportWidth: window.innerWidth,
+      }
+    },
+    created(){
+      window.addEventListener("resize", this.handleResize);
+    },
+    methods: {
+      handleResize() {
+        this.viewportWidth = window.innerWidth;
+      }
     }
 })
 </script>
