@@ -7,7 +7,7 @@
           </div>
           <div class="user">
             <div class="buttons">
-              <button class="submit">Submit your FML</button>
+              <button @click="toggleIsSubmitted" class="submit">Submit your FML</button>
               <button class="moderate">Moderate your FML</button>
             </div>
             <span class="login">Log in</span>
@@ -32,17 +32,22 @@
 import { defineComponent } from 'vue';
 export default defineComponent({
   name: "PcHeader",
+  methods:{
+    toggleIsSubmitted():void{
+      this.$emit("toggleSubmitIsClicked", );
+    }
+  }
 })
 </script>
 
 <style scoped>
 .information{
-  height:60px;
+  height:72px;
   background-color: rgba(0, 102, 174 ,1);
 }
 
 .information div{
-  height: 60px;
+  height: 72px;
 }
 
 .logo{
@@ -105,14 +110,14 @@ export default defineComponent({
   background-color:pink;
   color:white;
   border-radius: 20px;
-  padding: 8px;
+  padding:16px 24px;
 }
 
 .moderate{
   background-color: black;
   color:white;
   border-radius: 20px;
-  padding: 8px;
+  padding:16px 24px;
   margin-left: 16px;
 }
 </style>

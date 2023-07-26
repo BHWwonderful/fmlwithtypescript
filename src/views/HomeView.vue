@@ -4,12 +4,14 @@
     <MobileHeader v-if="viewportWidth <=800" />
   </div>
   <div class="content-wrap">
-    <section class="content">
-      <RenderContent/>
-    </section>
-    <section class="banner">
-      
-    </section>
+    <div class="container">
+      <section class="content">
+        <RenderContent/>
+      </section>
+      <section class="banner" v-if="viewportWidth >= 1024">
+        <KeywordFilter/>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -20,6 +22,7 @@ import { defineComponent } from 'vue';
 import PcHeader from '@/components/semantics/PcHeader.vue';
 import MobileHeader from "../components/semantics/MobileHeader.vue";
 import RenderContent from '@/components/RenderContent.vue';
+import KeywordFilter from '@/components/KeywordFilter.vue';
 
 // assets
 
@@ -29,6 +32,7 @@ export default defineComponent({
       MobileHeader,
       PcHeader,
       RenderContent,
+      KeywordFilter,
     },
     data(){
       return {
@@ -54,18 +58,24 @@ export default defineComponent({
 @media screen and (min-width: 1024px) {
 
   .content-wrap{
+    background-color:rgba(234, 234, 234, 1);
+  }
+
+  .container{
   display: flex;
-  max-width:1200px;
   margin: 0 auto;
-}
+  max-width:1200px;
+  padding-left:8px;
+  
+  }
   .content{
     flex-grow:2;
   }
 
   .banner{
     flex-grow: 1;
-    height:400px;
-    background-color: grey;
+    max-width:800px;
+    padding:8px;
   }
 }
   

@@ -13,6 +13,60 @@
     @increaseDisagreePoint="increaseDisagreePoint"
     @decreaseDisagreePoint="decreaseDisagreePoint"
     />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
+    <ContentCard :contentData="dataArray[1]"
+    @increaseAgreePoint="increaseAgreePoint"
+    @decreaseAgreePoint="decreaseAgreePoint"
+    @increaseDisagreePoint="increaseDisagreePoint"
+    @decreaseDisagreePoint="decreaseDisagreePoint"
+    />
   </div>
 </template>
 
@@ -42,9 +96,7 @@ export default defineComponent({
               content: "I had sex with a guy",
               username: "Selan"
             },
-
           ]
-
         }
     },
     components:{

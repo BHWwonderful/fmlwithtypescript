@@ -169,6 +169,9 @@
   @media screen and (min-width: 400px) {
     .content{
         padding:24px;
+        background-color:white;
+        margin-top:16px;
+        border-radius:20px;
     }
 
     .content-header{
@@ -194,15 +197,17 @@
     .button{
       display: flex;
       width:40%;
-      background-color:var(--primary-color);
       color:white;
       cursor: pointer;
+      line-height: 1.5rem;
     }
 
     .button-info{
       width:70%;
       background-color:var(--primary-color);
-      padding:4px;
+      padding:4px 8px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
     }
 
     .score-info{
@@ -210,7 +215,9 @@
       align-items: center;
       flex-grow:1;
       justify-content: center;
-      background-color:var(--accent-color)
+      background-color:var(--accent-color);
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
     }
 
     .agree{
