@@ -34,6 +34,7 @@
   
   <script lang="ts">
   import { defineComponent } from 'vue';
+  import type { PropType } from 'vue';
 
   interface UserData {
     id: number;
@@ -54,8 +55,8 @@
       },
       props: {
         contentData: {
-          type: Object as () => UserData,
-          default: () => ({})
+          type: Object as PropType<UserData>,
+          required: true
         }
       },
       methods: {
@@ -102,8 +103,6 @@
   </script>
   
   <style scoped>
-
-
 
   @media screen and (max-width: 400px) {
     .content{
@@ -200,6 +199,7 @@
       color:white;
       cursor: pointer;
       line-height: 1.5rem;
+      font-size:1rem;
     }
 
     .button-info{
@@ -208,6 +208,7 @@
       padding:4px 8px;
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
+      text-align: center;
     }
 
     .score-info{

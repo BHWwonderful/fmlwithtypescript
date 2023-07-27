@@ -19,6 +19,7 @@
           <nav class="links">
             <router-link to="/">ALL</router-link>
             <router-link to="/top">Random</router-link>
+            <a @click="goToHomePage">Go To Home</a>
           </nav>
           <div>
             <input type="text"/>
@@ -35,6 +36,9 @@ export default defineComponent({
   methods:{
     toggleIsSubmitted():void{
       this.$emit("toggleSubmitIsClicked", );
+    },
+    goToHomePage():void{
+      this.$router.push("/");
     }
   }
 })
@@ -56,7 +60,12 @@ export default defineComponent({
 }
 
 .login{
-  line-height:60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left:8px;
+  padding-right:8px;
+  cursor: pointer;
 }
 
 .navigation{
@@ -97,27 +106,49 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   color:white;
-  width: 50%;
+  width:60%;
 }
 
 .buttons{
-  width: 80%;
+  width: 90%;
   display: flex;
   align-items: center;
 }
 
 .submit{
+  font-size:1rem;
   background-color:pink;
   color:white;
   border-radius: 20px;
-  padding:16px 24px;
+  padding:8px 24px;
 }
 
 .moderate{
+  font-size:1rem;
   background-color: black;
   color:white;
   border-radius: 20px;
-  padding:16px 24px;
+  padding:8px 24px;
   margin-left: 16px;
+}
+
+@media screen and (min-width: 1024px) {
+.submit{
+  font-size:1.25rem;
+  background-color:pink;
+  color:white;
+  border-radius: 20px;
+  padding:8px 24px;
+}
+
+.moderate{
+  font-size:1.25rem;
+  background-color: black;
+  color:white;
+  border-radius: 20px;
+  padding:8px 24px;
+  margin-left: 16px;
+}
+  
 }
 </style>

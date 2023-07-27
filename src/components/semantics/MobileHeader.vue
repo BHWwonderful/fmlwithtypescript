@@ -33,7 +33,6 @@ import searchImg from "../../assets/images/search.svg";
 import LogInButton from "../ui/button/LogInButton.vue";
 import LogOutButton from "../ui/button/LogOutButton.vue";
 
-
 // Components
 export default defineComponent({
     name: "MobileHeader",

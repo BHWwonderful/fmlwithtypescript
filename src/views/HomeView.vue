@@ -1,7 +1,7 @@
 <template>
   <div>
-    <PcHeader v-if="viewportWidth >= 800" />
-    <MobileHeader v-if="viewportWidth <=800" />
+    <PcHeader v-if="viewportWidth >= 768" />
+    <MobileHeader v-if="viewportWidth < 768" />
   </div>
   <div class="content-wrap">
     <div class="container">
@@ -64,7 +64,7 @@ export default defineComponent({
   .container{
   display: flex;
   margin: 0 auto;
-  max-width:1200px;
+  max-width:1280px;
   padding-left:8px;
   
   }

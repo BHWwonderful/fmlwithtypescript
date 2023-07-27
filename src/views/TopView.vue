@@ -9,6 +9,7 @@
      v-if="submitIsClicked"
      @toggleSubmitIsClicked="toggleSubmitIsClicked"
     />
+    <div>{{ $store.state.counter }}</div>
   </div>
 </template>
 
@@ -31,7 +32,8 @@ export default defineComponent({
         submitIsClicked: false,
       }
     },
-    created(){
+    created()
+    {
       window.addEventListener("resize", this.handleResize);
     },
     methods: {
@@ -40,7 +42,7 @@ export default defineComponent({
       },
       toggleSubmitIsClicked(): void{
         this.submitIsClicked = !this.submitIsClicked;
-      }
+      },
     }
 })
 </script>
