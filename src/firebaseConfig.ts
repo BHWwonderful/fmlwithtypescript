@@ -2,13 +2,13 @@ import { initializeApp, FirebaseOptions } from 'firebase/app';
 import { getFirestore } from "firebase/firestore/lite";
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyC_nNA5R7fHXt0xTpvjNAM6vtn3ut4d6f0",
+  authDomain: "fmlwithtypescript.firebaseapp.com",
+  projectId: "fmlwithtypescript",
+  storageBucket: "fmlwithtypescript.appspot.com",
+  messagingSenderId: "159538387361",
+  appId: "1:159538387361:web:3a12771736d60e87e593e0",
+  measurementId: "G-52V5ZFLQTG"
 };
 
 const app = initializeApp(firebaseConfig);

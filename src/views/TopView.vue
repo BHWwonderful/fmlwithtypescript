@@ -9,7 +9,9 @@
      v-if="submitIsClicked"
      @toggleSubmitIsClicked="toggleSubmitIsClicked"
     />
-    <div>{{ $store.state.counter }}</div>
+  </div>
+  <div v-if="contentData">
+    안녕!
   </div>
 </template>
 
@@ -18,6 +20,7 @@ import { defineComponent } from 'vue'
 import PcHeader from '@/components/semantics/PcHeader.vue';
 import MobileHeader from "../components/semantics/MobileHeader.vue";
 import SubmitDataModal from '@/components/SubmitDataModal.vue';
+import { ContentItem } from "@/store/modules/contentModule";
 
 export default defineComponent({
     name: "TopView",
@@ -32,9 +35,22 @@ export default defineComponent({
         submitIsClicked: false,
       }
     },
+    computed: {
+      contentData(): ContentItem[]{
+        return this.$store.getters.getTotalContent;
+      }
+    },
+    async mounted(){
+      try {
+        await this.$store.dispatch('fetchData');
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
     created()
     {
       window.addEventListener("resize", this.handleResize);
+      console.log(this.contentData)
     },
     methods: {
       handleResize(): void{

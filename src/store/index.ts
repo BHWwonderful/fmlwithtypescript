@@ -1,17 +1,15 @@
-import { createStore } from "vuex";
+import { createStore, Store } from "vuex";
+import contentModule, { ContentState } from "./modules/contentModule";
 
-export default createStore({
-  state:{
-    counter: 0,
-  },
-  getters: {
-    time2(state) {
-      return state.counter * 2;
-    }
-  },
-  mutations: {
-    setCounter(state, value) {
-      state.counter = value;
-    }
+// 루트 상태 타입 정의
+export interface RootState {
+  content: ContentState;
+}
+
+const store: Store<RootState> = createStore<RootState>({
+  modules: {
+    content: contentModule,
   }
 })
+
+export default store;

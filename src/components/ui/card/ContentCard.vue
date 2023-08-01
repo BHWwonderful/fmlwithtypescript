@@ -1,5 +1,5 @@
 <template>
-    <article class="content">
+    <article v-if="contentData" class="content">
       <div class="content-header">
         <div class="title">
           <a>
@@ -7,21 +7,20 @@
           </a>
         </div>
         <div class="user">
-          <span>{{ contentData.username }}</span>
+          <span>By {{ contentData.username }}</span>
           <img />
-          <span>- Date, id {{ contentData.id }}</span>
         </div>
       </div>
       <div class="content-body">
         <p>{{ contentData.content }}</p>
       </div>
       <div class="content-footer">
-        <a @click="handleToggleAgree(contentData.id)" class="button">
-          <span class="button-info agree" :class="{ clicked: isAgreeClicked }">인정해</span>
+        <a class="button">
+          <span class="button-info agree" :class="{ clicked: isAgreeClicked }">I AGREE, YOUR LIFE SUCKS</span>
           <span class="score-info" >{{ contentData.agree }}</span>
         </a>
-        <a @click="handleToggleDisagree(contentData.id)" class="button" >
-          <span class="button-info disagree" :class="{ clicked: isDisagreeClicked }">인정 못 해</span>
+        <a class="button" >
+          <span class="button-info disagree" :class="{ clicked: isDisagreeClicked }">You DESERVED IT</span>
           <span class="score-info">{{ contentData.disagree }}</span>
         </a>
       </div>
@@ -35,15 +34,7 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import type { PropType } from 'vue';
-
-  interface UserData {
-    id: number;
-    agree: number;
-    disagree: number;
-    title: string;
-    username: string;
-    content: string;
-  }
+  import { ContentItem } from '@/store/modules/contentModule';
 
   export default defineComponent({
       name: "RenderContent",
@@ -55,48 +46,13 @@
       },
       props: {
         contentData: {
-          type: Object as PropType<UserData>,
+          type: Object as PropType<ContentItem>,
           required: true
         }
       },
-      methods: {
-        handleToggleAgree(id: number): void {
-          if (this.isDisagreeClicked){
-            return;
-          }
-          if (this.isAgreeClicked) {
-            this.decreaseAgree(id);
-            this.isAgreeClicked = false;
-          } else {
-            this.increaseAgree(id);
-            this.isAgreeClicked = true;
-          }
-        },
-        handleToggleDisagree(id: number): void {
-          if (this.isAgreeClicked){
-            return;
-          }
-          if (this.isDisagreeClicked) {
-            this.decreaseDisagree(id);
-            this.isDisagreeClicked = false;
-          } else {
-            this.increaseDisagree(id);
-            this.isDisagreeClicked = true;
-          }
-        },
-        increaseAgree(id: number): void{
-          this.$emit('increaseAgreePoint', id-1);
-        },
-        decreaseAgree(id: number): void{
-          this.$emit('decreaseAgreePoint', id-1);
-        },
-        increaseDisagree(id: number): void{
-          this.$emit('increaseDisagreePoint', id-1);
-        },
-        decreaseDisagree(id: number): void{
-          this.$emit('decreaseDisagreePoint', id-1);
-        }
-      }
+      mounted(){
+        console.log(this.contentData)
+      },
   })
 
 
@@ -131,9 +87,13 @@
     }
 
     .button-info{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width:80%;
       background-color:var(--primary-color);
       padding:4px;
+      font-weight: bold;
     }
 
     .agree{
@@ -195,7 +155,7 @@
     
     .button{
       display: flex;
-      width:40%;
+      width:45%;
       color:white;
       cursor: pointer;
       line-height: 1.5rem;
@@ -203,12 +163,17 @@
     }
 
     .button-info{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width:70%;
       background-color:var(--primary-color);
       padding:4px 8px;
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
       text-align: center;
+      font-weight: bold;
+      font-size:14px;
     }
 
     .score-info{
