@@ -13,6 +13,7 @@ export interface ContentItem {
     disagree: number;
     title: string;
     username: string;
+    gender: string;
 }
 
 const contentModule: Module<ContentState, RootState> = {

@@ -61,12 +61,17 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name:"SubmitDataModal",
+    data(){
+      return{
+        isClicked: false,
+      }
+    },
     methods:{
       handleSubmit(event: any): void{
         event.preventDefault();
       },
       toggleIsSubmit():void{
-        this.$emit("toggleSubmitIsClicked", );
+        this.$emit("closeSubmitDataModal");
       }
     },
 })

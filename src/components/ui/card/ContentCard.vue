@@ -8,6 +8,8 @@
         </div>
         <div class="user">
           <span>By {{ contentData.username }}</span>
+          -
+          <span>{{ contentData.gender }}</span>
           <img />
         </div>
       </div>

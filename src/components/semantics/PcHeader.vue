@@ -7,7 +7,7 @@
           </div>
           <div class="user">
             <div class="buttons">
-              <button @click="toggleIsSubmitted" class="submit">Submit your FML</button>
+              <button @click="openSubmitDataModal" class="submit">Submit your FML</button>
               <button class="moderate">Moderate your FML</button>
             </div>
             <span class="login">Log in</span>
@@ -26,20 +26,37 @@
           </div>
         </div>
       </div>
+      <SubmitDataModal
+        v-if="isSubmitClicked"
+        @closeSubmitDataModal="closeSubmitDataModal"
+      />
     </header>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import SubmitDataModal from '../SubmitDataModal.vue';
+
 export default defineComponent({
   name: "PcHeader",
+  data(){
+    return {
+      isSubmitClicked: false,
+    }
+  },
   methods:{
-    toggleIsSubmitted():void{
-      this.$emit("toggleSubmitIsClicked", );
-    },
     goToHomePage():void{
       this.$router.push("/");
+    },
+    openSubmitDataModal(): void{
+      this.isSubmitClicked = true;
+    },
+    closeSubmitDataModal(): void{
+      this.isSubmitClicked = false;
     }
+  },
+  components:{
+    SubmitDataModal,
   }
 })
 </script>
