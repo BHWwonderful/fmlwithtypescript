@@ -27,8 +27,8 @@
         </a>
       </div>
       <div class="buttons">
-        <a>트위터</a>
-        <a>페이스북</a>
+        <a>Comment</a>
+        <a>Favorite</a>
       </div>
     </article>
   </template>
@@ -123,7 +123,14 @@
     }
     .buttons{
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+    }
+
+    .buttons a{
+      border: 1px solid grey;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
     }
   }
 
@@ -194,6 +201,18 @@
 
     .disagree{
       background-color:var(--secondary-color);
+    }
+
+    .buttons{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .buttons a{
+      border: 1px solid grey;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
     }
   }
 

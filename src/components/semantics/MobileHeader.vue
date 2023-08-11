@@ -15,7 +15,7 @@
     <div class="navigation">
       <nav class="links">
         <router-link to="/">ALL</router-link>
-        <router-link to="/top">RANDOM</router-link>
+        <router-link to="/top">TOP</router-link>
       </nav>
       <button>
         <img :src="searchImg" />

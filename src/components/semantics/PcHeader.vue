@@ -18,8 +18,11 @@
         <div class="content">
           <nav class="links">
             <router-link to="/">ALL</router-link>
-            <router-link to="/top">Random</router-link>
-            <a @click="goToHomePage">Go To Home</a>
+            <a>RANDOM</a>
+            <a>SPICY</a>
+            <a>RANDOM SPICY</a>
+            <a>NEARLY FMLS</a>
+            <router-link to="/top">The Top</router-link>
           </nav>
           <div>
             <input type="text"/>

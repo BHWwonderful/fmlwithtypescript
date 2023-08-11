@@ -6,7 +6,7 @@ export interface RootState {
   content: ContentState;
 }
 
-const store: Store<RootState> = createStore<RootState>({
+const store: Store<RootState> = createStore({
   modules: {
     content: contentModule,
   }
