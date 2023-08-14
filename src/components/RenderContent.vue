@@ -3,7 +3,9 @@
      <ContentCard 
        v-for="content in contentData"
        :contentData="content"
-       :key="content.id"   
+       :key="content.id"
+       :viewportWidth="viewportWidth"
+       :currentUserID="currentUserID"   
     />
   </div>
 </template>
@@ -21,6 +23,10 @@ export default defineComponent({
     //     required: true,
     //   }
     // },
+    props: {
+      viewportWidth: Number,
+      currentUserID: String,
+    },
     computed: {
       contentData(): ContentItem[]{
         return this.$store.getters.getTotalContent;

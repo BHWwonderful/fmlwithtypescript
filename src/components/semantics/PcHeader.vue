@@ -8,9 +8,15 @@
           <div class="user">
             <div class="buttons">
               <button @click="openSubmitDataModal" class="submit">Submit your FML</button>
-              <button class="moderate">Moderate your FML</button>
+              <div class="moderate">
+                <router-link to="/moderate">Moderate Your FML</router-link>
+              </div>
             </div>
-            <span class="login">Log in</span>
+            <span v-if="!isAnonymous" class="login">Log in</span>
+            <div v-if="isAnonymous" class="login">
+              <span>Welcome!</span>
+              <span>Guest</span>
+            </div>
           </div>
         </div>
       </div>
@@ -18,14 +24,14 @@
         <div class="content">
           <nav class="links">
             <router-link to="/">ALL</router-link>
-            <a>RANDOM</a>
+            <a @click="testNavigation">RANDOM</a>
             <a>SPICY</a>
             <a>RANDOM SPICY</a>
             <a>NEARLY FMLS</a>
             <router-link to="/top">The Top</router-link>
           </nav>
-          <div>
-            <input type="text"/>
+          <div class="search">
+            <input type="text" placeholder="Search"/>
           </div>
         </div>
       </div>
@@ -47,6 +53,9 @@ export default defineComponent({
       isSubmitClicked: false,
     }
   },
+  props:{
+    isAnonymous: Boolean,
+  },
   methods:{
     goToHomePage():void{
       this.$router.push("/");
@@ -56,6 +65,9 @@ export default defineComponent({
     },
     closeSubmitDataModal(): void{
       this.isSubmitClicked = false;
+    },
+    testNavigation(): void{
+      this.$router.push('/');
     }
   },
   components:{
@@ -70,22 +82,21 @@ export default defineComponent({
   background-color: rgba(0, 102, 174 ,1);
 }
 
-.information div{
-  height: 72px;
-}
-
 .logo{
   display: flex;
   align-items: center;
+  color:white;
 }
 
 .login{
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   padding-left:8px;
   padding-right:8px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .navigation{
@@ -97,8 +108,8 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left:1.5rem;
-  padding-right:1.5rem;
+  padding-left:1rem;
+  padding-right:1rem;
   margin: 0 auto;
 }
 
@@ -107,6 +118,13 @@ export default defineComponent({
   align-items: center;
   height:40px;
   margin-left:-1rem;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.links::-webkit-scrollbar {
+      display: none;
 }
 
 .links a{
@@ -127,48 +145,69 @@ export default defineComponent({
   justify-content: space-between;
   color:white;
   width:60%;
+  height:72px;
 }
 
 .buttons{
-  width: 90%;
+  width: 95%;
   display: flex;
   align-items: center;
 }
 
 .submit{
-  font-size:1rem;
+  font-size:0.875rem;
   background-color:pink;
-  color:white;
+  color:black;
   border-radius: 20px;
   padding:8px 24px;
 }
 
 .moderate{
-  font-size:1rem;
+  display: flex;
+  justify-content: center;
   background-color: black;
-  color:white;
   border-radius: 20px;
+  align-items: center;
   padding:8px 24px;
-  margin-left: 16px;
+  margin-left: 1rem;
+}
+
+.moderate a{
+  font-size: 0.875rem;
+  color:white;
+}
+
+.search{
+  height: 40px;
+}
+
+.search input{
+  margin-left: 0.5rem;
+  height: 100%;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  padding-left: 0.5rem;
 }
 
 @media screen and (min-width: 1024px) {
 .submit{
   font-size:1.25rem;
   background-color:pink;
-  color:white;
+  color:black;
   border-radius: 20px;
   padding:8px 24px;
 }
 
 .moderate{
-  font-size:1.25rem;
-  background-color: black;
-  color:white;
-  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding:8px 24px;
-  margin-left: 16px;
 }
-  
+
+.moderate a{
+  font-size: 1.25rem;
+  color:white;
+}
 }
 </style>

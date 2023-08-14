@@ -1,4 +1,4 @@
-import { query, collection, getDocs } from "firebase/firestore/lite";
+import { query, collection, getDocs } from "firebase/firestore";
 import db from "@/firebaseConfig";
 
 const fetchContentDataFromFireBase = async () => {

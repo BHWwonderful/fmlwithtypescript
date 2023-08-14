@@ -42,16 +42,13 @@
 import { defineComponent } from 'vue';
 export default defineComponent ({
     name: "keyword filter",
-    data(){
-        return{
 
-        }
-    }
 })
 </script>
 
 <style scoped>
     .wrap{
+        height: auto;
         position:sticky;
         top:0;
         border-radius: 20px;

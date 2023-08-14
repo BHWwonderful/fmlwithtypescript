@@ -1,4 +1,4 @@
-html, body, header, main, section, footer, div, button, h1, h2, h3, h4, h5, h6, p, span, a, input, select, textarea{
+html, body, header, main, section, footer, div, button, h1, h2, h3, h4, h5, h6, p, span, a, input, select, textarea, ul, li{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -17,4 +17,8 @@ button{
 
 a{
     text-decoration: none;
+}
+
+ul, li{
+    list-style: none;
 }

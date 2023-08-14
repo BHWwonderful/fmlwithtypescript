@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 import PcHeader from '@/components/semantics/PcHeader.vue';
 import MobileHeader from "../components/semantics/MobileHeader.vue";
 import { ContentItem } from "@/store/modules/contentModule";

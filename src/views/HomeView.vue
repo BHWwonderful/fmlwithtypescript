@@ -1,18 +1,29 @@
 <template>
-  <div>
-    <PcHeader v-if="viewportWidth >= 768" />
+  <div class="wrap">
+    <PcHeader
+     v-if="viewportWidth >= 768"
+     :isAnonymous="isAnonymous"
+    />
     <MobileHeader v-if="viewportWidth < 768" />
   </div>
   <div class="content-wrap">
     <div class="container">
       <section class="content">
-        <RenderContent v-if="contentData" :total-content="contentData"/>
+        <RenderContent 
+          v-if="contentData && isAnonymous" 
+          :viewportWidth="viewportWidth"
+          :currentUserID="currentUserID"
+        />
       </section>
       <section class="banner" v-if="viewportWidth >= 1024">
         <KeywordFilter/>
       </section>
     </div>
+    <div class="blank">
+
+    </div>
   </div>
+  <ResponsiveFooter />
 </template>
 
 <script lang="ts">
@@ -24,8 +35,10 @@ import MobileHeader from "../components/semantics/MobileHeader.vue";
 import RenderContent from '@/components/RenderContent.vue';
 import KeywordFilter from '@/components/KeywordFilter.vue';
 import { ContentItem } from '@/store/modules/contentModule';
+import ResponsiveFooter from '@/components/semantics/ResponsiveFooter.vue';
+import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 
-// assets
+const auth = getAuth();
 
 export default defineComponent({
     name: "HomeView",
@@ -34,10 +47,13 @@ export default defineComponent({
       PcHeader,
       RenderContent,
       KeywordFilter,
+      ResponsiveFooter,
     },
     data(){
       return {
         viewportWidth: window.innerWidth,
+        isAnonymous: false,
+        currentUserID: '',
       }
     },
     computed: {
@@ -46,29 +62,63 @@ export default defineComponent({
       }
     },
     mounted(){
-      try {
-        this.$store.dispatch('fetchData');
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      this.getContentDataFromStore();
+      this.userSignInAnonymousely();
     },
     created(){
       window.addEventListener("resize", this.handleResize);
+
+      onAuthStateChanged(auth, (user) => {
+        if(user){
+          this.changeCurrentUserID(user.uid);
+          this.changeIsAnonymous();
+        } else{
+          console.log("Nothing!")
+        }
+      })
     },
     methods: {
-      handleResize() {
+      handleResize(): void{
         this.viewportWidth = window.innerWidth;
-      }
-    }
-
+      },
+      async userSignInAnonymousely(): Promise<void> {
+        try{
+          const currentUser =  await signInAnonymously(auth);
+        } catch(error){
+          console.log(error);
+        }
+      },
+      getContentDataFromStore(): void{
+        try{
+          this.$store.dispatch('fetchData');
+        } catch(error){
+          console.log(error)
+        }
+      },
+      changeIsAnonymous(): void{
+        this.isAnonymous = true;
+      },
+      changeCurrentUserID(userID: string): void{
+        this.currentUserID = userID;
+      },
+    },
 })
 </script>
 
 <style scoped>
 
+  .blank{
+    height: 280px;
+  }
 
+  @media screen and (max-width: 1024px) {
+    .content-wrap{
+      background-color:rgba(234, 234, 234, 1);
+      padding: 1rem;
+    }
+  }
 
-@media screen and (min-width: 1024px) {
+  @media screen and (min-width: 1024px) {
 
   .content-wrap{
     background-color:rgba(234, 234, 234, 1);
@@ -86,6 +136,7 @@ export default defineComponent({
   }
 
   .banner{
+    position: relative;
     flex-grow: 1;
     min-width:350px;
     padding:8px;

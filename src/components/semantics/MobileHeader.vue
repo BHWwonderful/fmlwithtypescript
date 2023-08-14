@@ -7,19 +7,17 @@
         <div class="title">
           <h1>FML</h1>
         </div>
-        <div>
-          <LogInButton v-if="isLogIn == false" />
-          <LogOutButton v-if="isLogIn == true" />
-        </div>
+
     </div>
     <div class="navigation">
       <nav class="links">
         <router-link to="/">ALL</router-link>
-        <router-link to="/top">TOP</router-link>
+        <a>RANDOM</a>
+        <a>SPICY</a>
+        <a>RANDOM SPICY</a>
+        <a>NEARLY FMLS</a>
+        <router-link to="/top">THE TOP</router-link>
       </nav>
-      <button>
-        <img :src="searchImg" />
-      </button>
     </div>
   </header>
 </template>
@@ -29,9 +27,6 @@ import { defineComponent } from 'vue'
 
 // assets
 import hamburgerImg from "../../assets/images/hamburger.svg";
-import searchImg from "../../assets/images/search.svg";
-import LogInButton from "../ui/button/LogInButton.vue";
-import LogOutButton from "../ui/button/LogOutButton.vue";
 
 // Components
 export default defineComponent({
@@ -39,25 +34,20 @@ export default defineComponent({
     data() {
       return {
         hamburgerImg,
-        searchImg,
         isLogIn : false,
       }
     },
-    components: {
-      LogInButton,
-      LogOutButton,
-    },
-    
 })
 </script>
 
 <style scoped>
     .information{
+      position:relative;
       display:flex;
       justify-content: space-between;
       align-items: center;
-      padding-left:1.5rem;
-      padding-right:1.5rem;
+      padding-left:1rem;
+      padding-right:1rem;
       height:60px;
       background-color: rgba(0, 102, 174 ,1);
     }
@@ -66,15 +56,22 @@ export default defineComponent({
       display: flex;
       justify-content: space-between;
       background-color: rgba(1, 66, 119, 1);
-      padding-left:1.5rem;
-      padding-right:1.5rem;
+      padding-left:1rem;
     }
 
     .links{
+      width:100%;
       display: flex;
       align-items: center;
       height:40px;
       margin-left:-1rem;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      white-space: nowrap;
+    }
+
+    .links::-webkit-scrollbar {
+      display: none;
     }
 
     .links a{
@@ -95,6 +92,10 @@ export default defineComponent({
     }
 
     .title{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%, -50%);
       color: white;
       font-weight: bold;
     }

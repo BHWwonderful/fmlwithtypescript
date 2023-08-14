@@ -8,27 +8,39 @@
         </div>
         <div class="user">
           <span>By {{ contentData.username }}</span>
-          -
-          <span>{{ contentData.gender }}</span>
+          <img class="profileImg" v-if="contentData.gender === 'male' " :src="manImg" alt="man" />
+          <img class="profileImg" v-if="contentData.gender === 'female'" :src="womanImg" alt="woman" />
+          <img class="profileImg" v-if="contentData.gender !== 'male' && contentData.gender !== 'female'" :src="manImg" alt="anonymous" />
+          <span>- </span>
+          <span>{{ getYearFromDate }}/{{ getMonthFromDate }}/{{ getDateFromDate }}</span>
           <img />
         </div>
       </div>
       <div class="content-body">
         <p>{{ contentData.content }}</p>
       </div>
-      <div class="content-footer">
-        <a class="button">
+      <div v-if="currentPath !== '/moderate'" class="content-footer">
+        <a @click="toggleIsAgreeClicked" class="button">
           <span class="button-info agree" :class="{ clicked: isAgreeClicked }">I AGREE, YOUR LIFE SUCKS</span>
-          <span class="score-info" >{{ contentData.agree }}</span>
+          <span class="score-info">{{ agreeCount }}</span>
         </a>
-        <a class="button" >
-          <span class="button-info disagree" :class="{ clicked: isDisagreeClicked }">You DESERVED IT</span>
-          <span class="score-info">{{ contentData.disagree }}</span>
+        <a @click="toggleIsDisagreeClicked" class="button" >
+          <span class="button-info disagree" :class="{ clicked: isDisagreeClicked }">YOU DESERVED IT</span>
+          <span class="score-info">{{ disagreeCount }}</span>
         </a>
       </div>
-      <div class="buttons">
-        <a>Comment</a>
-        <a>Favorite</a>
+      <div v-if="viewportWidth < 768" class="buttons">
+        <a>Share</a>
+      </div>
+      <div v-if="viewportWidth > 768" class="sns">
+        <a class="snsButton twitter">
+          <img :src="twitterWhiteImg" alt="twitter" />
+          <span>twitter</span>
+        </a>
+        <a class="snsButton facebook">
+          <img :src="facebookWhiteImg" alt="facebook" />
+          <span>facebook</span>
+        </a>
       </div>
     </article>
   </template>
@@ -37,6 +49,19 @@
   import { defineComponent } from 'vue';
   import type { PropType } from 'vue';
   import { ContentItem } from '@/store/modules/contentModule';
+  import db from '@/firebaseConfig';
+  import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
+
+  // assets
+  import twitterWhiteImg from "../../../assets/images/twitterWhite.svg";
+  import facebookWhiteImg from "../../../assets/images/facebookWhite.svg";
+  import manImg from "../../../assets/images/man.svg";
+  import womanImg from "../../../assets/images/woman.svg";
+
+  interface AgreeDisagree {
+    contentID : string,
+    userID: string,
+  }
 
   export default defineComponent({
       name: "RenderContent",
@@ -44,27 +69,185 @@
         return{
           isAgreeClicked: false,
           isDisagreeClicked: false,
+          agreeCount: 0,
+          disagreeCount: 0,
+          twitterWhiteImg,
+          facebookWhiteImg,
+          manImg,
+          womanImg,
+          currentPath: "",
+        }
+      },
+      computed: {
+        getYearFromDate(){
+          return this.contentData.date.toDate().getFullYear();
+        },
+        getMonthFromDate(){
+          return this.contentData.date.toDate().getMonth() + 1;
+        },
+        getDateFromDate(){
+          return this.contentData.date.toDate().getDate();
         }
       },
       props: {
         contentData: {
           type: Object as PropType<ContentItem>,
           required: true
-        }
+        },
+        viewportWidth: Number,
+        currentUserID: String,
       },
       mounted(){
-        console.log(this.contentData)
+        this.getInitialAgreeData();
+        this.getInitialDisagreeData();
       },
+      created(){
+        this.currentPath = this.$route.path;
+      },
+      methods:{
+        async toggleIsAgreeClicked(): Promise<any>{
+          if(this.isDisagreeClicked){
+            return ;
+          }
+
+          if(!this.isAgreeClicked){
+            try{
+              const agreeCollectionRef = collection(db, 'agree');
+              const addAgreeData = await addDoc(agreeCollectionRef, {
+                contentID: this.contentData.id,
+                userID: this.currentUserID,
+              });
+              await this.getAgreeCount();
+              this.isAgreeClicked = true;
+            } catch(error){
+              console.log(error);
+            }            
+          } else{
+            try{
+              const q = query(collection(db, 'agree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+              const querySnapshot = await getDocs(q);
+              if(!querySnapshot.empty){
+                const agreeDataFromFirebase = querySnapshot.docs.map((doc) => ({
+                  id: doc.id,
+                }))
+                const agreeDataID = agreeDataFromFirebase[0].id;
+                const agreeDoc = doc(db, 'agree', agreeDataID);
+                const deleteAgreeData = await deleteDoc(agreeDoc);
+                await this.getAgreeCount();
+                this.isAgreeClicked = false;
+              } else{
+                return ;
+              }
+            } catch(error){
+              console.log(error);
+            }
+          }
+          
+        },
+        async toggleIsDisagreeClicked(): Promise<void>{
+          if(this.isAgreeClicked){
+            return ;
+          }
+
+          if(!this.isDisagreeClicked){
+            try{
+              const disagreeCollectionRef = collection(db, 'disagree');
+              const addDisagreeData = await addDoc(disagreeCollectionRef, {
+                contentID: this.contentData.id,
+                userID: this.currentUserID,
+              });
+              await this.getDisagreeCount();
+              this.isDisagreeClicked = true;
+            } catch(error){
+              console.log(error);
+            }
+
+          } else{
+            try{
+              const q = query(collection(db, 'disagree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+              const querySnapshot = await getDocs(q);
+              if(!querySnapshot.empty){
+                const disagreeDataFromFirebase = querySnapshot.docs.map((doc) => ({
+                  id: doc.id,
+                }))
+                const disagreeDataID = disagreeDataFromFirebase[0].id;
+                const disagreeDoc = doc(db, 'disagree', disagreeDataID);
+                const deleteDisagreeData = await deleteDoc(disagreeDoc);
+                await this.getDisagreeCount();
+                this.isDisagreeClicked = false;
+              }
+            } catch(error){
+              console.log(error);
+            }
+            
+          }
+        },
+        async getAgreeCount(): Promise<any>{
+          const agreeCountQuery = query(collection(db, 'agree'), where("contentID", "==", this.contentData.id));
+          try{
+            const agreeCountQuerySnapshot = await getDocs(agreeCountQuery);
+            this.changeAgreeCount(agreeCountQuerySnapshot.size);
+            return ;
+          } catch(error){
+            console.log(error);
+          }
+        },
+        async getDisagreeCount(): Promise<void>{
+          const disagreeCountQuery = query(collection(db, 'disagree'), where("contentID", "==", this.contentData.id));
+          try{
+            const disagreeCountQuerySnapshot = await getDocs(disagreeCountQuery);
+            this.changeDisagreeCount(disagreeCountQuerySnapshot.size);
+            return ;
+          } catch(error){
+            console.log(error);
+          }
+        },
+        async getInitialAgreeData(): Promise<void>{
+          try{
+            const q = query(collection(db, 'agree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+            const querySnapshot = await getDocs(q);
+            if(!querySnapshot.empty){
+              this.isAgreeClicked = true;
+              await this.getAgreeCount();
+            }
+          } catch(error){
+            console.log(error);
+          }
+        },
+        async getInitialDisagreeData(): Promise<void>{
+          try{
+            const q = query(collection(db, 'disagree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+            const querySnapshot = await getDocs(q);
+            if(!querySnapshot.empty){
+              this.isDisagreeClicked = true;
+              await this.getDisagreeCount(); 
+            }
+          } catch(error){
+            console.log(error);
+          }
+        },
+        changeAgreeCount(count: number): void{
+          this.agreeCount = count
+        },
+        changeDisagreeCount(count: number): void{
+          this.disagreeCount = count
+        }
+      }
   })
-
-
   </script>
   
   <style scoped>
 
-  @media screen and (max-width: 400px) {
+  .clicked{
+    background-color: rgba(124, 123, 114, 1);
+  }
+
+  @media screen and (max-width: 768px) {
     .content{
-        padding:24px;
+      padding:24px;
+      background-color:white;
+      margin-top:16px;
+      border-radius:0.25rem;
     }
 
     .content-header{
@@ -72,8 +255,12 @@
     }
 
     .content-body{
-      margin-bottom:16px;
+      margin-bottom:20px;
       color: var(--accent-color);
+    }
+
+    .content-body p{
+      word-wrap: break-word;
     }
 
     .content-footer{
@@ -86,20 +273,26 @@
       justify-content: space-between;
       color:white;
       cursor: pointer;
+      line-height: 1.25rem;
     }
 
     .button-info{
       display: flex;
-      justify-content: center;
       align-items: center;
       width:80%;
       background-color:var(--primary-color);
       padding:4px;
       font-weight: bold;
+      padding-top: 12px;
+      padding-left: 16px;
+      padding-bottom: 12px;
+      border-top-left-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
     }
 
     .agree{
       background-color:var(--primary-color);
+      margin-bottom: 1rem;
     }
 
     .disagree{
@@ -108,9 +301,16 @@
 
     .score-info{
       width:20%;
+      height:100%;
       background-color: var(--accent-color);
       text-align: center;
       padding:4px;
+      line-height: 1.25rem;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      border-top-right-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+      font-weight: bold;
     }
 
     .title{
@@ -121,25 +321,41 @@
     .user{
       color:var(--primary-color);
     }
+
+    .profileImg{
+      margin-left:0.5rem;
+      margin-right:0.5rem;
+    }
     .buttons{
       display: flex;
       justify-content: space-between;
     }
 
     .buttons a{
-      border: 1px solid grey;
+      width:100%;
+      text-align: center;
+      line-height: 1.25rem;
+      font-size: 12px;
       padding: 8px 16px;
-      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      border-radius: 0.25rem;
+      background-color: var(--secondary-color);
       cursor: pointer;
     }
   }
 
-  @media screen and (min-width: 400px) {
+  @media screen and (min-width: 769px) {
     .content{
         padding:24px;
         background-color:white;
         margin-top:16px;
         border-radius:20px;
+    }
+
+    .profileImg{
+      margin-left:0.5rem;
+      margin-right:0.5rem;
     }
 
     .content-header{
@@ -175,14 +391,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width:70%;
+      width:80%;
       background-color:var(--primary-color);
-      padding:4px 8px;
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
+      padding:12px 16px;
+      border-top-left-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
       text-align: center;
       font-weight: bold;
-      font-size:14px;
+      font-size: 14px;
     }
 
     .score-info{
@@ -191,8 +407,8 @@
       flex-grow:1;
       justify-content: center;
       background-color:var(--accent-color);
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-top-right-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
     }
 
     .agree{
@@ -213,6 +429,33 @@
       padding: 8px 16px;
       border-radius: 10px;
       cursor: pointer;
+    }
+
+    .sns{
+      display: flex;
+    }
+
+    .snsButton{
+      display: flex;
+      font-size: 14px;
+      padding: 12px 16px;
+      color:white;
+      border-radius: 0.25rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .snsButton span{
+      margin-left: 4px;
+    }
+
+    .twitter{
+      background-color: var(--primary-color);
+    }
+
+    .facebook{
+      background-color: var(--accent-color);
+      margin-left: 0.5rem;
     }
   }
 
