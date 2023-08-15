@@ -6,63 +6,72 @@
     />
     <MobileHeader v-if="viewportWidth <=768" />
     <main class="main">
-      <section>
-        <div class="img">
-          <img class="top-img" :src="topImg" alt="top" />
-        </div>
-        <div class="filters">
-          <div class="filter">
-            <button class="agree">THE MOST AGREED ON FMLS</button>
-            <div class="agree-button">
-              <img :src="voteImg" alt="The most agreed on fmls" />
+      <div class="top-wrap">
+        <div class="content">
+          <section>
+            <div class="img">
+              <img class="top-img" :src="topImg" alt="top" />
             </div>
-          </div>
-          <div class="filter">
-            <button class="comment">THE MOST COMMENTED ON FMLS</button>
-            <div class="comment-button">
-              <img :src="commentsImg" alt="The most commented on fmls" />
+            <div class="filters">
+              <div class="filter">
+                <button class="agree">THE MOST AGREED ON FMLS</button>
+                <div class="agree-button">
+                  <img :src="voteImg" alt="The most agreed on fmls" />
+                </div>
+              </div>
+              <div class="filter">
+                <button class="comment">THE MOST COMMENTED ON FMLS</button>
+                <div class="comment-button">
+                  <img :src="commentsImg" alt="The most commented on fmls" />
+                </div>
+              </div>
+              <div class="filter">
+                <button class="favorite">THE MOST FAVORITED</button>
+                <div class="favorite-button">
+                  <img :src="starBeigeImg" alt="The most favorited" />
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="filter">
-            <button class="favorite">THE MOST FAVORITED</button>
-            <div class="favorite-button">
-              <img :src="starBeigeImg" alt="The most favorited" />
+            <div class="time-filters">
+              <div class="time-filter">
+                <button @click="getFilteredAgreeDataByTime(filterStartOfDay, filterEndOfDay)">THE TOP OF THE DAY</button>
+              </div>
+              <div class="time-filter">
+                <button @click="getFilteredAgreeDataByTime(filterStartOfWeek, filterEndOfWeek)">THE TOP OF THE WEEk</button>
+              </div>
+              <div class="time-filter">
+                <button @click="getFilteredAgreeDataByTime(filterStartOfMonth, filterEndOfMonth)">THE TOP OF THE MONTH</button>
+              </div>
+              <div class="time-filter">
+                <button @click="getFilteredAgreeDataByTime(filterStartOfYear, filterEndOfYear)">THE TOP OF THE YEAR</button>
+              </div>
+              <div class="all-time-filter">
+                <a @click="getInitialFilteredData" class="all-time">THE ALL-TIME GREATEST FMLS</a>
+              </div>
             </div>
-          </div>
+          </section>
+          <section v-if="isAnonymouse && AgreeData.length > 0">
+            <ContentCard
+              v-for="data in AgreeData"
+              :key="data.id"
+              :contentID="data.contentID"
+              :content="data.content"
+              :date="data.date"
+              :gender="data.gender"
+              :title="data.title"
+              :username="data.username"
+              :viewportWidth="viewportWidth"
+              :currentUserID="currentUserID"
+            />
+          </section>
         </div>
-        <div class="time-filters">
-          <div class="time-filter">
-            <button>THE TOP OF THE DAY</button>
-          </div>
-          <div class="time-filter">
-            <button>THE TOP OF THE WEEk</button>
-          </div>
-          <div class="time-filter">
-            <button>THE TOP OF THE MONTH</button>
-          </div>
-          <div class="time-filter">
-            <button>THE TOP OF THE YEAR</button>
-          </div>
-          <div class="all-time-filter">
-            <a class="all-time">THE ALL-TIME GREATEST FMLS</a>
-          </div>
-        </div>
-      </section>
-      <section v-if="AgreeData.length > 0">
-        <ContentCard
-          v-for="data in AgreeData"
-          :key="data.id"
-          :contentID="data.contentID"
-          :content="data.content"
-          :date="data.date"
-          :gender="data.gender"
-          :title="data.title"
-          :username="data.username"
-          :viewportWidth="viewportWidth"
-          :currentUserID="currentUserID"
-        />
-      </section>
+        <section class="banner" v-if="viewportWidth >= 1024">
+            <KeywordFilter />
+        </section>
+      </div>
+      <div class="blank"></div>
     </main>
+    
     <ResponsiveFooter />
   </div>
 
@@ -77,6 +86,7 @@ import PcHeader from '@/components/semantics/PcHeader.vue';
 import MobileHeader from "../components/semantics/MobileHeader.vue";
 import ResponsiveFooter from '@/components/semantics/ResponsiveFooter.vue';
 import ContentCard from '@/components/ui/card/ContentCard.vue';
+import KeywordFilter from '@/components/KeywordFilter.vue';
 
 // interfaces
 import { AgreeItem } from '@/store/modules/contentModule';
@@ -96,8 +106,43 @@ export default defineComponent({
       MobileHeader,
       ResponsiveFooter,
       ContentCard,
+      KeywordFilter,
     },
     data(){
+
+      const today = new Date();
+
+      // 오늘 발생한 데이터를 필터링
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+
+      // 이번 주에 발생한 데이터를 필터링
+      const startOfWeek = new Date();
+      startOfWeek.setDate(today.getDate() - today.getDay()); // 이번 주의 첫 번째 요일을 일요일로 설정
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date();
+      endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
+      endOfWeek.setHours(23, 59, 59, 999);
+      
+      // 이번 달에 발생한 데이터를 필터링
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      endOfMonth.setHours(23, 59, 59, 999);
+
+      // 이번 년도에 발생한 데이터를 필터링
+      
+      const startOfYear = new Date(today.getFullYear(), 0, 1);
+      startOfYear.setHours(0, 0, 0, 0);
+
+      const endOfYear = new Date(today.getFullYear(), 11, 31);
+      endOfYear.setHours(23, 59, 59, 999);
+
       return {
         viewportWidth: window.innerWidth,
         topImg,
@@ -106,6 +151,14 @@ export default defineComponent({
         starBeigeImg,
         isAnonymouse: false,
         currentUserID: '',
+        filterStartOfDay: startOfDay,
+        filterEndOfDay: endOfDay,
+        filterStartOfWeek: startOfWeek,
+        filterEndOfWeek: endOfWeek,
+        filterStartOfMonth: startOfMonth,
+        filterEndOfMonth: endOfMonth,
+        filterStartOfYear: startOfYear,
+        filterEndOfYear: endOfYear,
       }
     },
     computed: {
@@ -141,16 +194,27 @@ export default defineComponent({
       changeCurrentUserID(id: string): void{
         this.currentUserID = id
       },
+      getFilteredAgreeDataByTime(startOfTime: Date, endOfTime: Date): void{
+        this.$store.dispatch('fetchAgreeDataByTime', {startOfTime: startOfTime, endOfTime: endOfTime});
+      },
     },
 
 })
 </script>
 
 <style scoped>
+
+  .top-wrap{
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
   .main{
     background-color:rgba(243, 246, 251, 1);
     padding-left:1rem;
     padding-right: 1rem;
+    
   }
 
   .img{
@@ -162,6 +226,17 @@ export default defineComponent({
   .top-img{
     width: 206px;
     height: 192px;
+  }
+
+  .banner{
+    position: relative;
+    flex-grow: 1;
+    min-width:350px;
+    padding:8px;
+  }
+
+  .blank{
+    height: 280px;
   }
 
   @media screen and (max-width: 768px) {
@@ -252,6 +327,7 @@ export default defineComponent({
   @media screen and (min-width: 769px) {
     .filters{
       display: flex;
+      justify-content: center;
       margin-right: -1rem;
     }
 

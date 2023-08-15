@@ -47,8 +47,6 @@
   
   <script lang="ts">
   import { defineComponent } from 'vue';
-  import type { PropType } from 'vue';
-  import { ContentItem } from '@/store/modules/contentModule';
   import db from '@/firebaseConfig';
   import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 
@@ -90,10 +88,6 @@
         }
       },
       props: {
-        contentData: {
-          type: Object as PropType<ContentItem>,
-          required: true
-        },
         content: String,
         contentID: String,
         date: {

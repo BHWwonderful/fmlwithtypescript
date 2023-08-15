@@ -4,6 +4,7 @@ import db from "@/firebaseConfig";
 import { getDocs, query, collection, where } from "firebase/firestore";
 import fetchContentDataFromFireBase from "@/api/fetchContentData";
 import fetchAwaitDataFromFirebase from "@/api/fetchAwaitData";
+import fetchContentDataByTimeFromFirebase from "@/api/fetchContentDataByTimeFilter";
 
 export interface ContentState {
     totalContent: ContentItem[];
@@ -87,14 +88,31 @@ const contentModule: Module<ContentState, RootState> = {
                 
                 const filteredQueryResults = queryResults.sort((a, b) => b.size - a.size);
                 const extractedDataArray = filteredQueryResults.flatMap((querySnapshot) => {
-                    return querySnapshot.docs.map((doc) => doc.data());
+                    return querySnapshot.docs[0].data();
                 })
                 commit('setAgreeContent', extractedDataArray);
                 
             } catch(error){
                 console.error("Error fetching data:", error);
             }
-        }
+        },
+        async fetchAgreeDataByTime({ commit }, payload) {
+            try{
+                const fetchedData = await fetchContentDataByTimeFromFirebase(payload.startOfTime, payload.endOfTime);
+                const agreeQueries = fetchedData.map((doc: any) => {
+                    const q = query(collection(db, 'agree'), where("contentID", "==", doc.id));
+                    return getDocs(q);
+                })
+                const queryResults = await Promise.all(agreeQueries);
+                const filteredQueryResults = queryResults.sort((a, b) => b.size - a.size);
+                const extractedDataArray = filteredQueryResults.flatMap((querySnapshot) => {
+                    return querySnapshot.docs[0].data();
+                })
+                commit('setAgreeContent', extractedDataArray);
+            } catch(error){
+                console.log("Error fetching data by time:", error);
+            }
+        },
     },
     getters: {
         getTotalContent: (state) => state.totalContent,
