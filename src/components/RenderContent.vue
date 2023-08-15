@@ -11,19 +11,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import ContentCard from './ui/card/ContentCard.vue';
-import { ContentItem } from '@/store/modules/contentModule';
+import { ContentItem, AgreeItem } from '@/store/modules/contentModule';
 
 export default defineComponent({
     name: "RenderContent",
-    // props: {
-    //   totalContent: {
-    //     type: Array as () => ContentItem[],
-    //     required: true,
-    //   }
-    // },
     props: {
+      totalContent: {
+        type: Array as () => PropType<(ContentItem | AgreeItem)>,
+        required: true,
+      },
       viewportWidth: Number,
       currentUserID: String,
     },

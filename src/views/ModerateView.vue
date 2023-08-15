@@ -1,11 +1,20 @@
 <template>
   <div>
-    <PcHeader v-if="viewportWidth >= 768" />
+    <PcHeader 
+      v-if="viewportWidth >= 768"
+      :isAnonymous="isAnonymous"
+     />
     <MobileHeader v-if="viewportWidth < 768" />
   </div>
   <main class="main">
     <div v-if="awaitData.length > 0">
-      <ContentCard :content-data="awaitData[0]" />
+      <ContentCard
+        :content="awaitData[0].content"
+        :date="awaitData[0].date"
+        :gender="awaitData[0].gender"
+        :title="awaitData[0].title"
+        :username="awaitData[0].username"
+      />
     </div>
     <div class="user-choose">
       <div class="choose">
@@ -28,6 +37,7 @@
 import { defineComponent } from 'vue';
 import db from '@/firebaseConfig';
 import { collection, addDoc, doc, deleteDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // components
 import MobileHeader from '@/components/semantics/MobileHeader.vue';
@@ -37,6 +47,8 @@ import ResponsiveFooter from '@/components/semantics/ResponsiveFooter.vue';
 
 // Interface
 import { AwaitItem } from '@/store/modules/contentModule';
+
+const auth = getAuth();
 
 export default defineComponent({
   name: "ModerateView",
@@ -49,6 +61,8 @@ export default defineComponent({
   data(){
     return {
       viewportWidth: window.innerWidth,
+      isAnonymous: false,
+      currentUserID: "",
     }
   },
   computed: {
@@ -65,6 +79,15 @@ export default defineComponent({
   },
   created(){
     window.addEventListener("resize", this.handleResize);
+
+    onAuthStateChanged(auth, (user) => {
+        if(user){
+          this.changeCurrentUserID(user.uid);
+          this.changeIsAnonymous();
+        } else{
+          console.log("Nothing!")
+        }
+      })
   },
   methods: {
     handleResize() {
@@ -94,6 +117,12 @@ export default defineComponent({
         console.log(error);
       }
     },
+    changeIsAnonymous(): void{
+      this.isAnonymous = true;
+    },
+    changeCurrentUserID(id: string): void{
+      this.currentUserID = id;
+    }
   },
 })
 </script>
@@ -105,7 +134,7 @@ export default defineComponent({
 
   .main{
     padding: 1rem;
-    background-color: rgba(234, 234, 234, 1);
+    background-color: rgba(243, 246, 251, 1);
   }
 
   .user-choose{

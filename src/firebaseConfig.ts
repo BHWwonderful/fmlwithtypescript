@@ -1,7 +1,7 @@
-import { initializeApp, FirebaseOptions } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 
-const firebaseConfig: FirebaseOptions = {
+const firebaseConfig = {
   apiKey: "AIzaSyC_nNA5R7fHXt0xTpvjNAM6vtn3ut4d6f0",
   authDomain: "fmlwithtypescript.firebaseapp.com",
   projectId: "fmlwithtypescript",

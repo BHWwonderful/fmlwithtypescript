@@ -8,11 +8,18 @@
   </div>
   <div class="content-wrap">
     <div class="container">
-      <section class="content">
-        <RenderContent 
-          v-if="contentData && isAnonymous" 
-          :viewportWidth="viewportWidth"
+      <section v-if="isAnonymous && contentData.length > 0" class="content">
+        <ContentCard 
+          v-for="data in contentData"
+          :key="data.id"
+          :contentID="data.id"
+          :title="data.title"
+          :username="data.username"
+          :content="data.content"
+          :gender="data.gender"
+          :date="data.date"
           :currentUserID="currentUserID"
+          :viewportWidth="viewportWidth"
         />
       </section>
       <section class="banner" v-if="viewportWidth >= 1024">
@@ -32,10 +39,14 @@ import { defineComponent } from 'vue';
 // components
 import PcHeader from '@/components/semantics/PcHeader.vue';
 import MobileHeader from "../components/semantics/MobileHeader.vue";
-import RenderContent from '@/components/RenderContent.vue';
 import KeywordFilter from '@/components/KeywordFilter.vue';
-import { ContentItem } from '@/store/modules/contentModule';
 import ResponsiveFooter from '@/components/semantics/ResponsiveFooter.vue';
+import ContentCard from '@/components/ui/card/ContentCard.vue';
+
+// interfaces
+import { ContentItem } from '@/store/modules/contentModule';
+
+// hooks
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 
 const auth = getAuth();
@@ -45,9 +56,9 @@ export default defineComponent({
     components: {
       MobileHeader,
       PcHeader,
-      RenderContent,
       KeywordFilter,
       ResponsiveFooter,
+      ContentCard,
     },
     data(){
       return {
@@ -113,7 +124,7 @@ export default defineComponent({
 
   @media screen and (max-width: 1024px) {
     .content-wrap{
-      background-color:rgba(234, 234, 234, 1);
+      background-color:rgba(243, 246, 251, 1);
       padding: 1rem;
     }
   }
@@ -121,7 +132,7 @@ export default defineComponent({
   @media screen and (min-width: 1024px) {
 
   .content-wrap{
-    background-color:rgba(234, 234, 234, 1);
+    background-color:rgba(243, 246, 251, 1);
   }
 
   .container{

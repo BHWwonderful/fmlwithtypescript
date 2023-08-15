@@ -1,23 +1,23 @@
 <template>
-    <article v-if="contentData" class="content">
+    <article class="content">
       <div class="content-header">
         <div class="title">
           <a>
-            <h2>{{ contentData.title }}</h2>
+            <h2>{{ title }}</h2>
           </a>
         </div>
         <div class="user">
-          <span>By {{ contentData.username }}</span>
-          <img class="profileImg" v-if="contentData.gender === 'male' " :src="manImg" alt="man" />
-          <img class="profileImg" v-if="contentData.gender === 'female'" :src="womanImg" alt="woman" />
-          <img class="profileImg" v-if="contentData.gender !== 'male' && contentData.gender !== 'female'" :src="manImg" alt="anonymous" />
+          <span>By {{ username }}</span>
+          <img class="profileImg" v-if="gender === 'male' " :src="manImg" alt="man" />
+          <img class="profileImg" v-if="gender === 'female'" :src="womanImg" alt="woman" />
+          <img class="profileImg" v-if="gender !== 'male' && gender !== 'female'" :src="manImg" alt="anonymous" />
           <span>- </span>
           <span>{{ getYearFromDate }}/{{ getMonthFromDate }}/{{ getDateFromDate }}</span>
           <img />
         </div>
       </div>
       <div class="content-body">
-        <p>{{ contentData.content }}</p>
+        <p>{{ content }}</p>
       </div>
       <div v-if="currentPath !== '/moderate'" class="content-footer">
         <a @click="toggleIsAgreeClicked" class="button">
@@ -80,13 +80,13 @@
       },
       computed: {
         getYearFromDate(){
-          return this.contentData.date.toDate().getFullYear();
+          return this.date.toDate().getFullYear();
         },
         getMonthFromDate(){
-          return this.contentData.date.toDate().getMonth() + 1;
+          return this.date.toDate().getMonth() + 1;
         },
         getDateFromDate(){
-          return this.contentData.date.toDate().getDate();
+          return this.date.toDate().getDate();
         }
       },
       props: {
@@ -94,6 +94,14 @@
           type: Object as PropType<ContentItem>,
           required: true
         },
+        content: String,
+        contentID: String,
+        date: {
+          type: null as any
+        },
+        gender: String,
+        title: String,
+        username: String,
         viewportWidth: Number,
         currentUserID: String,
       },
@@ -114,8 +122,13 @@
             try{
               const agreeCollectionRef = collection(db, 'agree');
               const addAgreeData = await addDoc(agreeCollectionRef, {
-                contentID: this.contentData.id,
+                contentID: this.contentID,
                 userID: this.currentUserID,
+                content: this.content,
+                date: this.date,
+                gender: this.gender,
+                title: this.title,
+                username: this.username,
               });
               await this.getAgreeCount();
               this.isAgreeClicked = true;
@@ -124,7 +137,7 @@
             }            
           } else{
             try{
-              const q = query(collection(db, 'agree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+              const q = query(collection(db, 'agree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentID));
               const querySnapshot = await getDocs(q);
               if(!querySnapshot.empty){
                 const agreeDataFromFirebase = querySnapshot.docs.map((doc) => ({
@@ -153,7 +166,7 @@
             try{
               const disagreeCollectionRef = collection(db, 'disagree');
               const addDisagreeData = await addDoc(disagreeCollectionRef, {
-                contentID: this.contentData.id,
+                contentID: this.contentID,
                 userID: this.currentUserID,
               });
               await this.getDisagreeCount();
@@ -164,7 +177,7 @@
 
           } else{
             try{
-              const q = query(collection(db, 'disagree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+              const q = query(collection(db, 'disagree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentID));
               const querySnapshot = await getDocs(q);
               if(!querySnapshot.empty){
                 const disagreeDataFromFirebase = querySnapshot.docs.map((doc) => ({
@@ -183,7 +196,7 @@
           }
         },
         async getAgreeCount(): Promise<any>{
-          const agreeCountQuery = query(collection(db, 'agree'), where("contentID", "==", this.contentData.id));
+          const agreeCountQuery = query(collection(db, 'agree'), where("contentID", "==", this.contentID));
           try{
             const agreeCountQuerySnapshot = await getDocs(agreeCountQuery);
             this.changeAgreeCount(agreeCountQuerySnapshot.size);
@@ -193,7 +206,7 @@
           }
         },
         async getDisagreeCount(): Promise<void>{
-          const disagreeCountQuery = query(collection(db, 'disagree'), where("contentID", "==", this.contentData.id));
+          const disagreeCountQuery = query(collection(db, 'disagree'), where("contentID", "==", this.contentID));
           try{
             const disagreeCountQuerySnapshot = await getDocs(disagreeCountQuery);
             this.changeDisagreeCount(disagreeCountQuerySnapshot.size);
@@ -204,11 +217,13 @@
         },
         async getInitialAgreeData(): Promise<void>{
           try{
-            const q = query(collection(db, 'agree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+            const q = query(collection(db, 'agree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentID));
             const querySnapshot = await getDocs(q);
             if(!querySnapshot.empty){
               this.isAgreeClicked = true;
               await this.getAgreeCount();
+            } else{
+              await this.getAgreeCount(); 
             }
           } catch(error){
             console.log(error);
@@ -216,11 +231,13 @@
         },
         async getInitialDisagreeData(): Promise<void>{
           try{
-            const q = query(collection(db, 'disagree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentData.id));
+            const q = query(collection(db, 'disagree'), where('userID', "==", this.currentUserID), where('contentID', '==', this.contentID));
             const querySnapshot = await getDocs(q);
             if(!querySnapshot.empty){
               this.isDisagreeClicked = true;
               await this.getDisagreeCount(); 
+            } else{
+              await this.getDisagreeCount();
             }
           } catch(error){
             console.log(error);

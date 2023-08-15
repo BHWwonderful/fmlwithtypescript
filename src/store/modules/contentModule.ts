@@ -1,11 +1,14 @@
 import { Module } from "vuex";
 import { RootState } from "../index";
+import db from "@/firebaseConfig";
+import { getDocs, query, collection, where } from "firebase/firestore";
 import fetchContentDataFromFireBase from "@/api/fetchContentData";
 import fetchAwaitDataFromFirebase from "@/api/fetchAwaitData";
 
 export interface ContentState {
     totalContent: ContentItem[];
     awaitContent: AwaitItem[];
+    agreeContent: AgreeItem[];
 }
 
 export interface ContentItem {
@@ -28,10 +31,22 @@ export interface AwaitItem {
     username: string;
 }
 
+export interface AgreeItem {
+    id: string;
+    contentID: string;
+    content: string;
+    date: any;
+    gender: string;
+    title: string;
+    userID: string;
+    username: string;
+}
+
 const contentModule: Module<ContentState, RootState> = {
     state: {
         totalContent: [] as ContentItem[],
         awaitContent: [] as AwaitItem[],
+        agreeContent: [] as AgreeItem[],
     },
     mutations: {
         setContent(state, newData: ContentItem[]) {
@@ -39,7 +54,10 @@ const contentModule: Module<ContentState, RootState> = {
         },
         setAwaitContent(state, newData: AwaitItem[]){
             state.awaitContent = newData;
-        }
+        },
+        setAgreeContent(state, newData: AgreeItem[]){
+            state.agreeContent = newData
+        },
     },
     actions: {
         async fetchData({ commit }) {
@@ -57,11 +75,31 @@ const contentModule: Module<ContentState, RootState> = {
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
-        } 
+        },
+        async fetchAgreeData({ commit }) {
+            try{
+                const fetchedData = await fetchContentDataFromFireBase();
+                const agreeQueries = fetchedData.map((doc) => {
+                    const q = query(collection(db, 'agree'), where("contentID", "==", doc.id));
+                    return getDocs(q);
+                })
+                const queryResults = await Promise.all(agreeQueries);
+                
+                const filteredQueryResults = queryResults.sort((a, b) => b.size - a.size);
+                const extractedDataArray = filteredQueryResults.flatMap((querySnapshot) => {
+                    return querySnapshot.docs.map((doc) => doc.data());
+                })
+                commit('setAgreeContent', extractedDataArray);
+                
+            } catch(error){
+                console.error("Error fetching data:", error);
+            }
+        }
     },
     getters: {
         getTotalContent: (state) => state.totalContent,
         getAwaitContent: (state) => state.awaitContent,
+        getAgreeContent: (state) => state.agreeContent,
     }
 }
 
