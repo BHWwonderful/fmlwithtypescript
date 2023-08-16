@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <div class="sns">
+    <div class="sns" v-if="!getIsDarkMode">
       <h2 class="sns-text">WE LOVE
         <img :src="heartPinkImg" alt="heart" />
         NEW FRIENDS!
@@ -17,7 +17,7 @@
         </a>
       </div>
     </div>
-    <div class="app-download">
+    <div class="app-download" :class="{ 'dark-primary' : getIsDarkMode}">
       <a>
         <img class="app-download-img" src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-en?size=250x83&releaseDate=1355702400&h=1f320a1ac91daae3112a26016861dc6b" alt="Download on the App Store" />
       </a>
@@ -25,10 +25,10 @@
         <img class="app-download-img" src="https://www.fmylife.com/images/v2/google-play-badge-en-en.png" alt="Get it on Google Play">
       </a>
     </div>
-    <div class="links">
+    <div class="links" :class="{ 'dark-accent' : getIsDarkMode}">
       <div class="link-container">
         <div class="link">
-          <h3 class="link-title">EVEN MORE FMLS</h3>
+          <h3 class="link-title" :class="{ 'dark-secondary' : getIsDarkMode}">EVEN MORE FMLS</h3>
           <ul>
             <li>
               <a>Nearly FMLs</a>
@@ -39,7 +39,7 @@
           </ul>
         </div>
         <div class="link center-link">
-          <h3 class="link-title">USEFUL LINKS</h3>
+          <h3 class="link-title" :class="{ 'dark-secondary' : getIsDarkMode}">USEFUL LINKS</h3>
           <ul>
             <li>
               <a>FAQ</a>
@@ -56,7 +56,7 @@
           </ul>
         </div>
         <div class="link">
-          <h3 class="link-title">FML AROUND THE WORLD</h3>
+          <h3 class="link-title" :class="{ 'dark-secondary' : getIsDarkMode}">FML AROUND THE WORLD</h3>
           <ul>
             <li>
               <a>Francais</a>
@@ -68,13 +68,14 @@
         </div>
       </div>
       <div class="dark-mode">
-        <button class="dark-mode-botton">
-          <img :src="moonWhiteImg" alt="Dark mode" />
+        <button @click="toggleIsDarkMode" class="dark-mode-botton">
+          <img v-if="!getIsDarkMode" :src="moonWhiteImg" alt="Turn on dark mode" />
+          <img v-if="getIsDarkMode" :src="sunWhiteImg" alt="Turn off dark mode" />
           Toggle Dark Mode
         </button>
       </div>
     </div>
-    <div class="copyright">
+    <div class="copyright" :class="{ 'dark-primary' : getIsDarkMode}">
       <p>© VDM SAS, All rights reserved</p>
     </div>
   </footer>
@@ -89,6 +90,7 @@ import instaPinkImg from "../../assets/images/instaPink.png";
 import facebookPinkImg from "../../assets/images/facebookPink.png";
 import twitterPinkImg from "../../assets/images/twitterPink.png";
 import moonWhiteImg from "../../assets/images/moonWhite.svg";
+import sunWhiteImg from "../../assets/images/sunWhite.svg";
 
 export default defineComponent({
   name: "ResponsiveFooter",
@@ -100,6 +102,17 @@ export default defineComponent({
       facebookPinkImg,
       twitterPinkImg,
       moonWhiteImg,
+      sunWhiteImg,
+    }
+  },
+  methods:{
+    toggleIsDarkMode(): void{
+      this.$store.commit("toggleIsDarkMode")
+    }
+  },
+  computed:{
+    getIsDarkMode(){
+      return this.$store.getters.getIsDarkMode
     }
   }
 })
@@ -172,10 +185,6 @@ export default defineComponent({
     padding-bottom: 1.25rem;
   }
 
-  .link-container{
-
-  }
-
   .link{
     padding-right: 2.5rem;
     padding-left: 2.5rem;
@@ -201,7 +210,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .dark-mode-botton{
@@ -297,6 +306,9 @@ export default defineComponent({
     font-size: 1rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    text-align: left;
   }
   .link a{
     display: block;
@@ -313,7 +325,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .dark-mode-botton{

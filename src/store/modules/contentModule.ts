@@ -59,6 +59,9 @@ const contentModule: Module<ContentState, RootState> = {
         setAgreeContent(state, newData: AgreeItem[]){
             state.agreeContent = newData
         },
+        resetAgreeContent(state){
+            state.agreeContent = []
+        },
     },
     actions: {
         async fetchData({ commit }) {
@@ -79,6 +82,7 @@ const contentModule: Module<ContentState, RootState> = {
         },
         async fetchAgreeData({ commit }) {
             try{
+                commit('resetAgreeContent');
                 const fetchedData = await fetchContentDataFromFireBase();
                 const agreeQueries = fetchedData.map((doc) => {
                     const q = query(collection(db, 'agree'), where("contentID", "==", doc.id));
@@ -98,6 +102,7 @@ const contentModule: Module<ContentState, RootState> = {
         },
         async fetchAgreeDataByTime({ commit }, payload) {
             try{
+                commit('resetAgreeContent');
                 const fetchedData = await fetchContentDataByTimeFromFirebase(payload.startOfTime, payload.endOfTime);
                 const agreeQueries = fetchedData.map((doc: any) => {
                     const q = query(collection(db, 'agree'), where("contentID", "==", doc.id));
@@ -108,6 +113,7 @@ const contentModule: Module<ContentState, RootState> = {
                 const extractedDataArray = filteredQueryResults.flatMap((querySnapshot) => {
                     return querySnapshot.docs[0].data();
                 })
+                console.log(extractedDataArray);
                 commit('setAgreeContent', extractedDataArray);
             } catch(error){
                 console.log("Error fetching data by time:", error);

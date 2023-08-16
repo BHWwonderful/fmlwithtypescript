@@ -1,5 +1,6 @@
 import { createStore, Store } from "vuex";
 import contentModule, { ContentState } from "./modules/contentModule";
+import darkModeModule from "./modules/darkModeModule";
 
 // 루트 상태 타입 정의
 export interface RootState {
@@ -9,6 +10,7 @@ export interface RootState {
 const store: Store<RootState> = createStore({
   modules: {
     content: contentModule,
+    darkMode: darkModeModule,
   }
 })
 

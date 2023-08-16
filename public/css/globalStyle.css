@@ -3,4 +3,58 @@
     --primary-color: rgba(0, 102, 174, 1);
     --accent-color: rgba(1, 66, 119, 1);
     --secondary-color: rgba(253, 103, 66, 1);
+    --tertiary-color: rgba(255, 156, 185, 1);
+
+    /* dark mode color */
+    --dark-primary-color: rgba(26, 26, 26, 1);
+    --dark-accent-color: rgba(90, 90, 90, 1);
+    --dark-secondary-color: rgba(122, 122, 122, 1);
+    --dark-tertiary-color: rgba(58, 58, 58, 1);
+
+    .dark-primary{
+        background-color: var(--dark-primary-color) !important;
+        color: white !important;
+    }
+
+    .dark-accent{
+        background-color: var(--dark-accent-color) !important;
+        color: white !important;
+    }
+
+    .dark-accent::placeholder{
+        color:white !important;
+    }
+
+    .dark-secondary{
+        background-color: var(--dark-secondary-color) !important;
+        color: white !important;
+    }
+
+    .dark-secondary::placeholder{
+        color: white !important;
+    }
+
+    .dark-tertiary{
+        background-color: var(--dark-tertiary-color) !important;
+        color: white !important;
+    }
+
+    .dark-blue-accent{
+        background-color: var(--accent-color) !important;
+        color: white !important;
+    }
+
+    .dark-blue-primary{
+        background-color: var(--primary-color) !important;
+        color:white !important;
+    }
+
+    .dark-text-secondary{
+        color: var(--dark-secondary-color) !important;
+    }
+
+    .dark-border-white{
+        border-color: white !important;
+    }
+
 }

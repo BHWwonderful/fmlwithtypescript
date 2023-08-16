@@ -1,43 +1,45 @@
 <template>
-    <article class="content">
+    <article class="content" :class="{ 'dark-accent': getIsDarkMode }">
       <div class="content-header">
-        <div class="title">
+        <div class="title" :class="{'dark-border-white' : getIsDarkMode}">
           <a>
-            <h2>{{ title }}</h2>
+            <h2 :class="{ 'dark-accent': getIsDarkMode}">{{ title }}</h2>
           </a>
         </div>
-        <div class="user">
+        <div class="user" :class="{ 'dark-accent': getIsDarkMode}">
           <span>By {{ username }}</span>
-          <img class="profileImg" v-if="gender === 'male' " :src="manImg" alt="man" />
-          <img class="profileImg" v-if="gender === 'female'" :src="womanImg" alt="woman" />
+          <img class="profileImg" v-if="gender === 'male' && !getIsDarkMode " :src="manImg" alt="man" />
+          <img class="profileImg" v-if="gender === 'male' && getIsDarkMode === true" :src="manWhiteImg" alt="man" />
+          <img class="profileImg" v-if="gender === 'female' && !getIsDarkMode" :src="womanImg" alt="woman" />
+          <img class="profileImg" v-if="gender === 'female' && getIsDarkMode === true" :src="womanWhiteImg" alt="woman" />
           <img class="profileImg" v-if="gender !== 'male' && gender !== 'female'" :src="manImg" alt="anonymous" />
-          <span>- </span>
+          <span class="date-bar">- </span>
           <span>{{ getYearFromDate }}/{{ getMonthFromDate }}/{{ getDateFromDate }}</span>
           <img />
         </div>
       </div>
       <div class="content-body">
-        <p>{{ content }}</p>
+        <p :class="{ 'dark-accent': getIsDarkMode }">{{ content }}</p>
       </div>
       <div v-if="currentPath !== '/moderate'" class="content-footer">
         <a @click="toggleIsAgreeClicked" class="button">
-          <span class="button-info agree" :class="{ clicked: isAgreeClicked }">I AGREE, YOUR LIFE SUCKS</span>
-          <span class="score-info">{{ agreeCount }}</span>
+          <span class="button-info agree" :class="{ clicked: isAgreeClicked, 'dark-blue-accent': getIsDarkMode }">I AGREE, YOUR LIFE SUCKS</span>
+          <span class="score-info" :class="{ 'dark-primary': getIsDarkMode }">{{ agreeCount }}</span>
         </a>
         <a @click="toggleIsDisagreeClicked" class="button" >
-          <span class="button-info disagree" :class="{ clicked: isDisagreeClicked }">YOU DESERVED IT</span>
-          <span class="score-info">{{ disagreeCount }}</span>
+          <span class="button-info disagree" :class="{ clicked: isDisagreeClicked, 'dark-blue-primary' : getIsDarkMode }">YOU DESERVED IT</span>
+          <span class="score-info" :class="{ 'dark-primary': getIsDarkMode }">{{ disagreeCount }}</span>
         </a>
       </div>
       <div v-if="viewportWidth < 768" class="buttons">
         <a>Share</a>
       </div>
       <div v-if="viewportWidth > 768" class="sns">
-        <a class="snsButton twitter">
+        <a class="snsButton twitter" :class="{ 'dark-secondary': getIsDarkMode }">
           <img :src="twitterWhiteImg" alt="twitter" />
           <span>twitter</span>
         </a>
-        <a class="snsButton facebook">
+        <a class="snsButton facebook" :class="{ 'dark-primary': getIsDarkMode }">
           <img :src="facebookWhiteImg" alt="facebook" />
           <span>facebook</span>
         </a>
@@ -55,6 +57,8 @@
   import facebookWhiteImg from "../../../assets/images/facebookWhite.svg";
   import manImg from "../../../assets/images/man.svg";
   import womanImg from "../../../assets/images/woman.svg";
+  import manWhiteImg from "../../../assets/images/manWhite.svg";
+  import womanWhiteImg from "../../../assets/images/womanWhite.svg";
 
   interface AgreeDisagree {
     contentID : string,
@@ -73,6 +77,8 @@
           facebookWhiteImg,
           manImg,
           womanImg,
+          manWhiteImg,
+          womanWhiteImg,
           currentPath: "",
         }
       },
@@ -85,6 +91,9 @@
         },
         getDateFromDate(){
           return this.date.toDate().getDate();
+        },
+        getIsDarkMode(){
+          return this.$store.getters.getIsDarkMode
         }
       },
       props: {
@@ -250,7 +259,7 @@
   <style scoped>
 
   .clicked{
-    background-color: rgba(124, 123, 114, 1);
+    background-color: rgba(124, 123, 114, 1) !important;
   }
 
   @media screen and (max-width: 768px) {
@@ -325,12 +334,19 @@
     }
 
     .title{
-        color: var(--accent-color);
-        border-bottom : 1px solid var(--accent-color);
+      color: var(--accent-color);
+      padding-bottom: 0.25rem;
+      border-bottom : 1px solid var(--accent-color);
     }
 
     .user{
+      display: flex;
       color:var(--primary-color);
+      margin-top: 0.5rem;
+    }
+
+    .date-bar{
+      margin-right: 0.5rem;
     }
 
     .profileImg{
@@ -361,7 +377,7 @@
         padding:24px;
         background-color:white;
         margin-top:16px;
-        border-radius:20px;
+        border-radius:0.25rem;
     }
 
     .profileImg{
@@ -379,6 +395,10 @@
 
     .content-body{
       margin-bottom:16px;
+      color: var(--accent-color);
+    }
+
+    .content-body p{
       color: var(--accent-color);
     }
 
@@ -420,6 +440,21 @@
       background-color:var(--accent-color);
       border-top-right-radius: 0.25rem;
       border-bottom-right-radius: 0.25rem;
+    }
+
+    .title{
+      color: var(--accent-color);
+      border-bottom: 1px solid var(--accent-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .user{
+      display: flex;
+      margin-top: 0.5rem;
+    }
+
+    .date-bar{
+      margin-right: 0.5rem;
     }
 
     .agree{

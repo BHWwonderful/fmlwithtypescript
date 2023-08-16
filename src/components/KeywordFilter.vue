@@ -1,9 +1,9 @@
 <template>
   <section class="wrap">
-    <div class="title">
+    <div class="title" :class="{'dark-blue-accent' : getIsDarkMode}">
         <h2>Keyword</h2>
     </div>
-    <div class="keywords">
+    <div class="keywords" :class="{'dark-accent' : getIsDarkMode}">
         <a>Boredom</a>
         <a>Love</a>
         <a>Scary</a>
@@ -42,7 +42,11 @@
 import { defineComponent } from 'vue';
 export default defineComponent ({
     name: "keyword filter",
-
+    computed:{
+      getIsDarkMode(){
+          return this.$store.getters.getIsDarkMode
+      }
+    }
 })
 </script>
 
@@ -51,15 +55,15 @@ export default defineComponent ({
         height: auto;
         position:sticky;
         top:0;
-        border-radius: 20px;
+        border-radius: 0.25rem;
         width:100%;
         padding:8px;
     }
 
     .title{
         text-align: center;
-        border-top-right-radius: 20px;
-        border-top-left-radius: 20px;
+        border-top-right-radius: 0.25rem;
+        border-top-left-radius: 0.25rem;
         background-color:var(--accent-color);
         color: white;
         padding-top:8px;
@@ -73,8 +77,8 @@ export default defineComponent ({
         height:800px;
         background-color:white;
         padding-left:16px;
-        border-bottom-left-radius: 20px;
-        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
     }
 
     .keywords a{

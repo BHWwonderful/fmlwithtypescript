@@ -5,7 +5,7 @@
       :isAnonymous="isAnonymouse"
     />
     <MobileHeader v-if="viewportWidth <=768" />
-    <main class="main">
+    <main class="main" :class="{'dark-primary' : getIsDarkMode}">
       <div class="top-wrap">
         <div class="content">
           <section>
@@ -34,16 +34,36 @@
             </div>
             <div class="time-filters">
               <div class="time-filter">
-                <button @click="getFilteredAgreeDataByTime(filterStartOfDay, filterEndOfDay)">THE TOP OF THE DAY</button>
+                <button
+                 @click="getFilteredAgreeDataByTime(filterStartOfDay, filterEndOfDay)"
+                 :class="{ 'dark-primary' : getIsDarkMode, 'dark-border-white' : getIsDarkMode }"
+                 >
+                 THE TOP OF THE DAY
+                </button>
               </div>
               <div class="time-filter">
-                <button @click="getFilteredAgreeDataByTime(filterStartOfWeek, filterEndOfWeek)">THE TOP OF THE WEEk</button>
+                <button
+                 @click="getFilteredAgreeDataByTime(filterStartOfWeek, filterEndOfWeek)"
+                 :class="{ 'dark-primary' : getIsDarkMode, 'dark-border-white' : getIsDarkMode }"
+                 >
+                 THE TOP OF THE WEEk
+                </button>
               </div>
               <div class="time-filter">
-                <button @click="getFilteredAgreeDataByTime(filterStartOfMonth, filterEndOfMonth)">THE TOP OF THE MONTH</button>
+                <button
+                 @click="getFilteredAgreeDataByTime(filterStartOfMonth, filterEndOfMonth)"
+                 :class="{ 'dark-primary' : getIsDarkMode, 'dark-border-white' : getIsDarkMode }"
+                 >
+                 THE TOP OF THE MONTH
+                </button>
               </div>
               <div class="time-filter">
-                <button @click="getFilteredAgreeDataByTime(filterStartOfYear, filterEndOfYear)">THE TOP OF THE YEAR</button>
+                <button 
+                @click="getFilteredAgreeDataByTime(filterStartOfYear, filterEndOfYear)"
+                :class="{ 'dark-primary' : getIsDarkMode, 'dark-border-white' : getIsDarkMode }"
+                >
+                THE TOP OF THE YEAR
+                </button>
               </div>
               <div class="all-time-filter">
                 <a @click="getInitialFilteredData" class="all-time">THE ALL-TIME GREATEST FMLS</a>
@@ -71,7 +91,6 @@
       </div>
       <div class="blank"></div>
     </main>
-    
     <ResponsiveFooter />
   </div>
 
@@ -164,7 +183,10 @@ export default defineComponent({
     computed: {
       AgreeData(): AgreeItem[]{
         return this.$store.getters.getAgreeContent;
-      }
+      },
+      getIsDarkMode(){
+          return this.$store.getters.getIsDarkMode
+      },
     },
     mounted(){
       this.getInitialFilteredData();

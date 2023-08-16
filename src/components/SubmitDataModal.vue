@@ -2,11 +2,11 @@
   <div ref="SubmitCloseTargetElement" id="wrap" @click="(event) => handleCloseSubmitFML(event)" class="wrap">
     <div class="content">
       <div class="title">
-          <h2>SUBMIT YOUR FML</h2>
+          <h2 :class="{'dark-blue-primary' : getIsDarkMode}">SUBMIT YOUR FML</h2>
       </div>
-      <div class="info">
+      <div class="info" :class="{'dark-tertiary' : getIsDarkMode}">
           <div class="info-content">
-            <div class="info-title">
+            <div class="info-title" :class="{'dark-tertiary' : getIsDarkMode}">
                 <h3>Have you just experienced an FML moment?</h3>
             </div>
             <div class="info-text">
@@ -17,23 +17,23 @@
                 </p>
             </div>
           </div>
-          <hr class="line" />
+          <hr class="line" :class="{'dark-border-white' : getIsDarkMode}" />
           <div v-if="errorMessage" class="warning">{{ errorMessage }}</div>
           <form @submit.prevent="(event) => handleSubmit(event)" class="form">
             <div class="title-wrapper">
               <div>
                 <label>Title</label>
-                <input v-model="title" type="text" placeholder="Title" :class="{ 'wrong': isTitleShort }" />
+                <input v-model="title" type="text" placeholder="Title" :class="{ 'wrong': isTitleShort, 'dark-secondary' : getIsDarkMode }" />
               </div>
             </div>
             <div class="name-gender-wrapper">
               <div>
                 <label>Your name</label>
-                <input v-model="username" :class="['name', { 'wrong': isUsernameWrong}]" type="text" placeholder="Your name" />
+                <input v-model="username" :class="['name', { 'wrong': isUsernameWrong, 'dark-secondary' : getIsDarkMode}]" type="text" placeholder="Your name" />
               </div>
               <div>
                 <label>Gender</label>
-                  <select v-model="gender" :class="['gender', { 'wrong': isGenderWrong}]">
+                  <select v-model="gender" :class="['gender', { 'wrong': isGenderWrong, 'dark-secondary' : getIsDarkMode}]">
                     <option value="gender">Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -42,10 +42,10 @@
             </div>
             <div class="email-wrapper">
                 <label>Your email</label>
-                <input v-model="email" class="email" type="email" placeholder="Your email(optional)"/>
+                <input v-model="email" class="email" :class="{'dark-secondary' : getIsDarkMode}" type="email" placeholder="Your email(optional)"/>
             </div>
             <div class="story-wrapper">
-                <textarea v-model="content" :class="['story', { 'wrong': isContentShort}]" name="" id="" cols="30" rows="10" placeholder="Today... FML" maxlength="320"></textarea>
+                <textarea v-model="content" :class="['story', { 'wrong': isContentShort, 'dark-secondary' : getIsDarkMode}]" name="" id="" cols="30" rows="10" placeholder="Today... FML" maxlength="320"></textarea>
                 <p>Remaining characters: {{ remainingCharacters }}</p>
             </div>
             <div class="anonymous-wrapper">
@@ -121,24 +121,24 @@ export default defineComponent({
           }
 
           const awaitContentRef = collection(db, "await");
-        if(this.isAnonymouseClicked){
-          const addData = await addDoc(awaitContentRef, {
-          content: this.content,
-          title: this.title,
-          date: new Date(),
-          email: this.email,
-          gender: this.gender,
-          username: "anonymous",
-          })
-        } else{
-          const addData = await addDoc(awaitContentRef, {
-          content: this.content,
-          date: new Date(),
-          title: this.title,
-          email: this.email,
-          gender: this.gender,
-          username: this.username,
-          })
+          if(this.isAnonymouseClicked){
+            const addData = await addDoc(awaitContentRef, {
+            content: this.content,
+            title: this.title,
+            date: new Date(),
+            email: this.email,
+            gender: this.gender,
+            username: "anonymous",
+            })
+          } else{
+            const addData = await addDoc(awaitContentRef, {
+            content: this.content,
+            date: new Date(),
+            title: this.title,
+            email: this.email,
+            gender: this.gender,
+            username: this.username,
+            })
         }
         this.$emit("closeSubmitDataModal");
         return ;
@@ -185,6 +185,9 @@ export default defineComponent({
     computed: {
       remainingCharacters(): number{
         return this.maxTextLength - this.content.length;
+      },
+      getIsDarkMode(){
+          return this.$store.getters.getIsDarkMode
       }
     }
 })
@@ -193,7 +196,7 @@ export default defineComponent({
 <style scoped>
     @media screen and (max-width:800px) {
         .wrap{
-          position:absolute;
+          position:fixed;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -201,12 +204,14 @@ export default defineComponent({
           height:100%;
           top:0;
           background-color:rgba(107, 114, 128, 0.75);
-          z-index:9999;
-          padding:8px;
+          z-index:99999;
+          padding-left: 1rem;
+          padding-right: 1rem;
+          overflow-y: auto;
         }
 
         .content{
-          width:100vh;         
+          height: 90%;
         }
 
         .title h2{
@@ -246,6 +251,36 @@ export default defineComponent({
           border: 1px solid var(--secondary-color);
           margin-top:24px;
           margin-bottom:24px;
+        }
+
+        .warning{
+          text-align: center;
+          margin-top: 16px;
+          margin-bottom: 16px;
+          color: rgba(185, 28, 28, 1);
+          font-weight: bold;
+          font-size: 1.5rem;
+        }
+
+        .wrong{
+          background-color: rgba(185, 28, 28, 0.1);
+        }
+
+        .title-wrapper{
+          width: 100%;
+          margin-bottom: 16px;
+        }
+
+        .title-wrapper label{
+          text-indent: -9999px;
+          display: inline-block;
+        }
+
+        .title-wrapper input {
+          width: 100%;
+          font-size: 1rem;
+          padding: 0.5rem;
+          border-color: rgba(209, 213, 217, 1);
         }
 
 

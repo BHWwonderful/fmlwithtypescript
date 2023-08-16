@@ -6,7 +6,7 @@
      />
     <MobileHeader v-if="viewportWidth < 768" />
   </div>
-  <main class="main">
+  <main class="main" :class="{'dark-primary' : getIsDarkMode}">
     <div v-if="awaitData.length > 0">
       <ContentCard
         :content="awaitData[0].content"
@@ -18,9 +18,9 @@
     </div>
     <div class="user-choose">
       <div class="choose">
-        <p class="question">Did this story make you laugh?</p>
-        <p class="question">Is this really an FML that should to be published?</p>
-        <p class="decide">It's up to you to decide</p>
+        <p class="question" :class="{'dark-text-secondary' : getIsDarkMode}">Did this story make you laugh?</p>
+        <p class="question" :class="{'dark-text-secondary' : getIsDarkMode}">Is this really an FML that should to be published?</p>
+        <p class="decide" :class="{'dark-primary' : getIsDarkMode}">It's up to you to decide</p>
       </div>
       <div class="buttons">
         <a @click="addAwaitContentToContent" class="yes">Yes</a>
@@ -29,7 +29,6 @@
     </div>
     <div class="blank"></div>
   </main>
-  
   <ResponsiveFooter />
 </template>
 
@@ -68,6 +67,9 @@ export default defineComponent({
   computed: {
     awaitData(): AwaitItem[]{
       return this.$store.getters.getAwaitContent;
+    },
+    getIsDarkMode(){
+          return this.$store.getters.getIsDarkMode
     }
   },
   mounted(){

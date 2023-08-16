@@ -6,7 +6,7 @@
     />
     <MobileHeader v-if="viewportWidth < 768" />
   </div>
-  <div class="content-wrap">
+  <div class="content-wrap" :class="{'dark-primary' : getIsDarkMode}">
     <div class="container">
       <section v-if="isAnonymous && contentData.length > 0" class="content">
         <ContentCard 
@@ -70,6 +70,9 @@ export default defineComponent({
     computed: {
       contentData(): ContentItem[]{
         return this.$store.getters.getTotalContent;
+      },
+      getIsDarkMode(){
+          return this.$store.getters.getIsDarkMode
       }
     },
     mounted(){

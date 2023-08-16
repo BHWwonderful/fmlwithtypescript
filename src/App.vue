@@ -13,5 +13,15 @@ export default defineComponent({
 </script>
 
 <style>
+  @font-face {
+    font-family: 'Geomanist';
+    src: url('./assets/fonts/Geomanist-Regular.ttf') format('truetype');
+    font-weight: 400;
+  }
 
+  @font-face {
+    font-family: 'Geomanist';
+    src: url('./assets/fonts/Geomanist-Bold.ttf') format('truetype');
+    font-weight: 700;
+  }
 </style>

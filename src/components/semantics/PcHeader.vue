@@ -1,14 +1,15 @@
 <template>
     <header>
-      <div class="information">
+      <div class="information" :class="{ 'dark-primary' : getIsDarkMode}">
         <div class="content">
           <div class="logo">
-            <h1>FML</h1>
+            <img class="logo-img" :src="logoImg" alt="logo" />
+            <img class="baseline-img" :src="baselineImg" alt="The best joke in life is life itself" />
           </div>
           <div class="user">
             <div class="buttons">
               <button @click="openSubmitDataModal" class="submit">Submit your FML</button>
-              <div class="moderate">
+              <div class="moderate" :class="{ 'dark-blue-primary' : getIsDarkMode}">
                 <router-link to="/moderate">Moderate Your FML</router-link>
               </div>
             </div>
@@ -20,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="navigation">
+      <div class="navigation" :class="{ 'dark-accent' : getIsDarkMode}">
         <div class="content">
           <nav class="links">
             <router-link to="/">ALL</router-link>
@@ -29,9 +30,10 @@
             <a>RANDOM SPICY</a>
             <a>NEARLY FMLS</a>
             <router-link to="/top">The Top</router-link>
+            <a>FML - THE FOLLOW-UP</a>
           </nav>
           <div class="search">
-            <input type="text" placeholder="Search"/>
+            <input type="text" placeholder="Search" :class="{ 'dark-secondary' : getIsDarkMode}"/>
           </div>
         </div>
       </div>
@@ -44,13 +46,21 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+
+// components
 import SubmitDataModal from '../SubmitDataModal.vue';
+
+// assets
+import logoImg from "../../assets/images/logo.png";
+import baselineImg from "../../assets/images/baseline.png"
 
 export default defineComponent({
   name: "PcHeader",
   data(){
     return {
       isSubmitClicked: false,
+      logoImg,
+      baselineImg,
     }
   },
   props:{
@@ -72,6 +82,11 @@ export default defineComponent({
   },
   components:{
     SubmitDataModal,
+  },
+  computed: {
+    getIsDarkMode(){
+        return this.$store.getters.getIsDarkMode
+    }
   }
 })
 </script>
@@ -86,6 +101,16 @@ export default defineComponent({
   display: flex;
   align-items: center;
   color:white;
+}
+
+.logo-img{
+  width: 118px;
+  height: 48px;
+}
+
+.baseline-img{
+  width: 260px;
+  height: 48px;
 }
 
 .login{
@@ -160,6 +185,8 @@ export default defineComponent({
   color:black;
   border-radius: 20px;
   padding:8px 24px;
+  text-align: left;
+  font-weight: bold;
 }
 
 .moderate{
@@ -170,6 +197,7 @@ export default defineComponent({
   align-items: center;
   padding:8px 24px;
   margin-left: 1rem;
+  font-weight: bold;
 }
 
 .moderate a{
@@ -185,7 +213,7 @@ export default defineComponent({
   margin-left: 0.5rem;
   height: 100%;
   font-size: 1rem;
-  border-radius: 0.25rem;
+  border:none;
   padding-left: 0.5rem;
 }
 
